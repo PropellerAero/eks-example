@@ -17,6 +17,7 @@ This is a simplified example of the terraform configuration that Propeller uses 
 - Fluentd
 - Kube State Metrics
 - Google SSO
+- IAM
 
 ## Getting Started
 
