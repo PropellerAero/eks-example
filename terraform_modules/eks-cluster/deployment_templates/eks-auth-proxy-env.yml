@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eks-auth-proxy-env
+type: Opaque
+data:
+  EKS_AUTH_COOKIE_SECRET: ${eks_auth_cookie_secret}

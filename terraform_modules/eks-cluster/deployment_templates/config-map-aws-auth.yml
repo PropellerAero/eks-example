@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: ${node_role_arn}
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+    - rolearn: arn:aws:iam::${account_id}:role/eks-cluster-developer
+      username: cluster-developer
+    - rolearn: arn:aws:iam::${account_id}:role/eks-cluster-administrator
+      username: cluster-administrator
+      groups:
+        - system:masters
+  # automatically map IAM ARN from these accounts to username.
+  mapAccounts: |
+    - "${account_id}"

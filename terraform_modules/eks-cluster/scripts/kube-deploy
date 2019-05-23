@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+TMP_CONF_FILE=kubeconf.tmp
+
+echo "Saving kube config"
+echo "$KUBE_CONF" > $TMP_CONF_FILE
+
+echo "Applying deployment directory"
+kubectl apply -R -f $DEPLOYMENT_DIR --kubeconfig $TMP_CONF_FILE
+
+echo "Cleaning up"
+rm $TMP_CONF_FILE
