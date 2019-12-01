@@ -6,7 +6,7 @@ resource "aws_wafregional_rate_based_rule" "rate_limit_all" {
 }
 
 resource "aws_wafregional_web_acl" "eks_ingress_waf_web_acl" {
-  depends_on  = ["aws_wafregional_rate_based_rule.rate_limit_all"]
+  depends_on  = [aws_wafregional_rate_based_rule.rate_limit_all]
   name        = "ingress-waf.${local.cluster_domain}"
   metric_name = "KubernetesIngressWafWebAcl"
 
@@ -20,7 +20,8 @@ resource "aws_wafregional_web_acl" "eks_ingress_waf_web_acl" {
     }
 
     priority = 2
-    rule_id  = "${aws_wafregional_rate_based_rule.rate_limit_all.id}"
+    rule_id  = aws_wafregional_rate_based_rule.rate_limit_all.id
     type     = "RATE_BASED"
   }
 }
+

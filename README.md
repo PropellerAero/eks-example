@@ -21,7 +21,7 @@ This is a simplified example of the terraform configuration that Propeller uses 
 
 ## Getting Started
 
-Before you begin you will need to make sure that you have the [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed.
+Before you begin you will need to make sure that you have the latest [AWS CLI](https://aws.amazon.com/cli/) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed.
 Install iam-authenticator, kubectl
 
 To enable Google SSO you will need to [create OAuth credentials](https://developers.google.com/identity/protocols/OpenIDConnect) if you do not already have some. Your redirect URI will depend on the root domain you use to configure your cluster. You will also need to create an [OIDC identity provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html) for your Google account.
@@ -35,7 +35,9 @@ Lastly, you will also need to make sure there is an EC2 key pair in the regions 
 1. Create an EC2 key pair in the region named `eks-keypair`
 add google domain
 
-2. Add a new EKS cluster to the `main.tf` terraform script in the root of this repository using the `eks-cluster` module. e.g.
+2. Comment out any clusters in `main.tf` and run `terraform apply` to create the prerequisite IAM roles
+
+3. Add a new EKS cluster to the `main.tf` terraform script in the root of this repository using the `eks-cluster` module. e.g.
 ```
 module "eks-cluster" {
   source = "./terraform_modules/eks-cluster"
@@ -57,12 +59,12 @@ output "eks-cluster-kubeconfig" {
   - Provide the root domain for your cluster. A route53 hosted zone for this domain must already exist. The services in your cluster will be accessible at `*.<cluster-name>.<root-domain>`
 
 
-3. Run `terraform apply` as a user with sufficient permissions.
+4. Run `terraform apply` as a user with sufficient permissions.
 
-4. As part of the terraform output you will see the `kubeconfig` for this cluster. Copy and paste this into a file at `~/.kube/config`. If you already have a config file you will have to merge them.
+5. As part of the terraform output you will see the `kubeconfig` for this cluster. Copy and paste this into a file at `~/.kube/config`. If you already have a config file you will have to merge them.
 
-5. Create a secret containing your Google OAuth credentials:
+6. Create a secret containing your Google OAuth credentials:
 
 `kubectl create secret generic google-oidc-credentials --from-literal=CLIENT_ID=<CLIENT_ID> --from-literal=CLIENT_SECRET=<CLIENT_SECRET>`
 
-6. Add a redirect URI to your Google OAuth config for `https://kube-dash.<cluster-name>.<root-domain>/login/oauth/callback`
+7. Add a redirect URI to your Google OAuth config for `https://kube-dash.<cluster-name>.<root-domain>/login/oauth/callback`

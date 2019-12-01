@@ -18,15 +18,16 @@ resource "aws_iam_role" "master" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
-  role       = "${aws_iam_role.master.name}"
+  role       = aws_iam_role.master.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
-  role       = "${aws_iam_role.master.name}"
+  role       = aws_iam_role.master.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
 
@@ -51,31 +52,32 @@ resource "aws_iam_role" "node" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_instance_profile" "node" {
   name = "eks-example-node"
-  role = "${aws_iam_role.node.name}"
+  role = aws_iam_role.node.name
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSWorkerNodePolicy" {
-  role       = "${aws_iam_role.node.name}"
+  role       = aws_iam_role.node.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
-  role       = "${aws_iam_role.node.name}"
+  role       = aws_iam_role.node.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
-  role       = "${aws_iam_role.node.name}"
+  role       = aws_iam_role.node.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
 resource "aws_iam_role_policy" "node" {
   name = "eks-example-node-policy"
-  role = "${aws_iam_role.node.id}"
+  role = aws_iam_role.node.id
 
   policy = <<EOF
 {
@@ -229,6 +231,7 @@ resource "aws_iam_role_policy" "node" {
     ]
 }
 EOF
+
 }
 
 #########
@@ -252,11 +255,12 @@ resource "aws_iam_role" "bastion" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy" "bastion" {
   name = "eks-example-bastion-policy"
-  role = "${aws_iam_role.bastion.id}"
+  role = aws_iam_role.bastion.id
 
   policy = <<EOF
 {
@@ -274,4 +278,6 @@ resource "aws_iam_role_policy" "bastion" {
     ]
 }
 EOF
+
 }
+

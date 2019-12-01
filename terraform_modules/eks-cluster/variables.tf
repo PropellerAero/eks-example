@@ -1,5 +1,6 @@
 ## PROVIDER
-provider "aws" {}
+provider "aws" {
+}
 
 ## REQUIRED
 variable "root_domain" {
@@ -39,33 +40,37 @@ variable "az_limit" {
 
 variable "http_routes" {
   description = "The HTTP routes to add to the ingress ALB. Should be a list of objects."
-  type        = "list"
+  type        = list(object({ subdomain = string, kube_service = string }))
   default     = []
 }
 
 variable "https_routes" {
   description = "The HTTPS routes to add to the ingress ALB. Should be a list of objects."
-  type        = "list"
+  type        = list(object({ subdomain = string, kube_service = string }))
   default     = []
 }
 
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
+data "aws_region" "current" {
+}
+
+data "aws_caller_identity" "current" {
+}
 
 locals {
   cluster_domain = "${var.cluster_name}.${var.root_domain}"
-  current_region = "${data.aws_region.current.name}"
+  current_region = data.aws_region.current.name
 
-  caller_arn = "${replace(
+  caller_arn = replace(
     data.aws_caller_identity.current.arn,
     "/arn:aws:sts::(\\d+):assumed-role/(\\w+)/\\w+/",
-    "arn:aws:iam::$1:role/$2"
-  )}"
+    "arn:aws:iam::$1:role/$2",
+  )
 
-  caller_is_role = "${replace(local.caller_arn, "/arn:aws:iam::\\d+:role/\\w+/", "found") == "found"}"
+  caller_is_role = replace(local.caller_arn, "/arn:aws:iam::\\d+:role/\\w+/", "found") == "found"
 }
 
 resource "random_string" "eks_auth_cookie_secret" {
   length  = 32
   special = false
 }
+

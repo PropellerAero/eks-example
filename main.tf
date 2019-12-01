@@ -1,8 +1,8 @@
 module "eks-example" {
   source = "./terraform_modules/eks-cluster"
 
-  providers {
-    aws = "aws.ap-southeast-1"
+  providers = {
+    aws = aws.us-east-1
   }
 
   cluster_name = "eks-example"
@@ -10,5 +10,6 @@ module "eks-example" {
 }
 
 output "eks-example-kubeconfig" {
-  value = "${module.eks-example.kubeconfig}"
+  value = module.eks-example.kubeconfig
 }
+
