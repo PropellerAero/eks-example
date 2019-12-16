@@ -129,7 +129,7 @@ spec:
               port: 9090
             initialDelaySeconds: 30
             timeoutSeconds: 30
-        - image: keattang/eks-auth-proxy:v1.7.0
+        - image: keattang/eks-auth-proxy:v1.8.2
           name: eks-auth-proxy
           ports:
             - containerPort: 3001
